@@ -1,17 +1,22 @@
 class Solution:
     def minOperations(self, boxes: str) -> List[int]:
-        binary_list = [int(digit) for digit in boxes]
-        n = len(binary_list)
+        n = len(boxes)
+        # Find positions of all '1's in the binary string
+        one_positions = [i for i in range(n) if boxes[i] == '1']
         
-        # Find positions of all 1s
-        one_positions = [i for i in range(n) if binary_list[i] == 1]
+        # If there are no '1's or only one '1', distances will be zero for all
+        if len(one_positions) == 0:
+            return [0] * n
         
-        # Calculate result for each position
-        result = []
+        result = [0] * n
+        
+        # For each '1' at position `i`, calculate the sum of distances to all other '1's
         for i in range(n):
-            # Sum of distances to all 1s from current position
-            distance_sum = sum(abs(i - pos) for pos in one_positions)
-            result.append(distance_sum)
+            if boxes[i] == '1':
+                # Sum the distance to each other '1'
+                result[i] = sum(abs(i - pos) for pos in one_positions if pos != i)
+            else:
+                # For each '0', calculate the sum of distances to all '1's
+                result[i] = sum(abs(i - pos) for pos in one_positions)
         
         return result
-        
